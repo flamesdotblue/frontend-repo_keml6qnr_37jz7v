@@ -1,4 +1,4 @@
-import { Calendar, Clock, MapPin, Users, Share2, Ticket } from "lucide-react";
+import { Calendar, CheckCheck, Clock, MapPin, Users, Share2, Ticket } from "lucide-react";
 
 function daysLeft(dateStr) {
   const target = new Date(dateStr).getTime();
@@ -9,7 +9,7 @@ function daysLeft(dateStr) {
   return `${days} days left`;
 }
 
-export default function EventCard({ event }) {
+export default function EventCard({ event, registered = false }) {
   const isFree = event.price === 0;
   return (
     <div className="group rounded-2xl overflow-hidden bg-white border border-slate-200 hover:shadow-lg transition">
@@ -32,6 +32,11 @@ export default function EventCard({ event }) {
             </div>
           )}
         </div>
+        {registered && (
+          <div className="absolute bottom-3 right-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold bg-green-600 text-white shadow">
+            <CheckCheck className="h-3.5 w-3.5" /> Registered
+          </div>
+        )}
       </div>
 
       <div className="p-4">
@@ -60,7 +65,6 @@ export default function EventCard({ event }) {
             <button className="p-2 rounded-lg hover:bg-slate-100" aria-label="Share">
               <Share2 className="h-4 w-4 text-slate-600" />
             </button>
-            <button className="text-xs font-medium px-3 py-1.5 rounded-lg text-white bg-gradient-to-r from-purple-600 to-cyan-500 hover:shadow active:scale-[0.99] transition">Register</button>
           </div>
         </div>
       </div>

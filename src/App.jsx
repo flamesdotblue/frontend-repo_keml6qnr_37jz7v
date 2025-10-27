@@ -1,14 +1,52 @@
 import { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import FeatureTabs from "./components/FeatureTabs";
 import LoginPage from "./components/LoginPage";
 import NotificationPanel from "./components/NotificationPanel";
+import EventDetailPage from "./components/EventDetailPage";
+import RegistrationPage from "./components/RegistrationPage";
+import ProfilePage from "./components/ProfilePage";
+import { GlobalProvider, useGlobal } from "./components/GlobalStore";
 
-function App() {
-  const [user, setUser] = useState(null);
+function Home() {
+  return (
+    <>
+      <HeroSection />
+      <FeatureTabs />
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="rounded-3xl bg-gradient-to-br from-fuchsia-50 via-purple-50 to-cyan-50 border border-slate-200 p-6 sm:p-10">
+          <h2 className="text-2xl font-bold tracking-tight">Why students love Flyx</h2>
+          <p className="mt-2 text-slate-600">Built for speed, crafted for delight, and designed for your campus journey.</p>
+          <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="rounded-2xl bg-white/80 border border-slate-200 p-4">
+              <p className="text-sm font-semibold">Personalized feed</p>
+              <p className="text-sm text-slate-600 mt-1">See exactly what matters: your clubs, interests, and what friends are attending.</p>
+            </div>
+            <div className="rounded-2xl bg-white/80 border border-slate-200 p-4">
+              <p className="text-sm font-semibold">Frictionless registration</p>
+              <p className="text-sm text-slate-600 mt-1">One-tap signup, smooth payments, instant tickets with QR codes.</p>
+            </div>
+            <div className="rounded-2xl bg-white/80 border border-slate-200 p-4">
+              <p className="text-sm font-semibold">Live moments</p>
+              <p className="text-sm text-slate-600 mt-1">Share photos, stories, and connect with attendees in real-time.</p>
+            </div>
+            <div className="rounded-2xl bg-white/80 border border-slate-200 p-4">
+              <p className="text-sm font-semibold">Beautiful by default</p>
+              <p className="text-sm text-slate-600 mt-1">Modern visuals, smooth animations, and delightful micro-interactions.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
+
+function Shell() {
   const [loginOpen, setLoginOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
+  const { user, setUser } = useGlobal();
 
   function handleLoginSuccess(u) {
     setUser(u);
@@ -35,33 +73,12 @@ function App() {
       </div>
 
       <main>
-        <HeroSection />
-        <FeatureTabs />
-
-        <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pb-16">
-          <div className="rounded-3xl bg-gradient-to-br from-fuchsia-50 via-purple-50 to-cyan-50 border border-slate-200 p-6 sm:p-10">
-            <h2 className="text-2xl font-bold tracking-tight">Why students love Flyx</h2>
-            <p className="mt-2 text-slate-600">Built for speed, crafted for delight, and designed for your campus journey.</p>
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="rounded-2xl bg-white/80 border border-slate-200 p-4">
-                <p className="text-sm font-semibold">Personalized feed</p>
-                <p className="text-sm text-slate-600 mt-1">See exactly what matters: your clubs, interests, and what friends are attending.</p>
-              </div>
-              <div className="rounded-2xl bg-white/80 border border-slate-200 p-4">
-                <p className="text-sm font-semibold">Frictionless registration</p>
-                <p className="text-sm text-slate-600 mt-1">One-tap signup, smooth payments, instant tickets with QR codes.</p>
-              </div>
-              <div className="rounded-2xl bg-white/80 border border-slate-200 p-4">
-                <p className="text-sm font-semibold">Live moments</p>
-                <p className="text-sm text-slate-600 mt-1">Share photos, stories, and connect with attendees in real-time.</p>
-              </div>
-              <div className="rounded-2xl bg-white/80 border border-slate-200 p-4">
-                <p className="text-sm font-semibold">Beautiful by default</p>
-                <p className="text-sm text-slate-600 mt-1">Modern visuals, smooth animations, and delightful micro-interactions.</p>
-              </div>
-            </div>
-          </div>
-        </section>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/event/:id" element={<EventDetailPage />} />
+          <Route path="/event/:id/register" element={<RegistrationPage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Routes>
       </main>
 
       <footer className="border-t border-slate-200 py-8">
@@ -78,4 +95,12 @@ function App() {
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <GlobalProvider>
+      <BrowserRouter>
+        <Shell />
+      </BrowserRouter>
+    </GlobalProvider>
+  );
+}
