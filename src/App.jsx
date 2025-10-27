@@ -1,11 +1,39 @@
+import { useState } from "react";
 import Navbar from "./components/Navbar";
 import HeroSection from "./components/HeroSection";
 import FeatureTabs from "./components/FeatureTabs";
+import LoginPage from "./components/LoginPage";
+import NotificationPanel from "./components/NotificationPanel";
 
 function App() {
+  const [user, setUser] = useState(null);
+  const [loginOpen, setLoginOpen] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+
+  function handleLoginSuccess(u) {
+    setUser(u);
+  }
+
+  function handleLogout() {
+    setUser(null);
+    setNotifOpen(false);
+  }
+
   return (
     <div className="min-h-screen bg-white text-slate-900">
-      <Navbar />
+      <div className="relative">
+        <Navbar
+          user={user}
+          onOpenLogin={() => setLoginOpen(true)}
+          onToggleNotifications={() => setNotifOpen((s) => !s)}
+          notificationsOpen={notifOpen}
+          onLogout={handleLogout}
+        />
+        {user && (
+          <NotificationPanel user={user} open={notifOpen} onClose={() => setNotifOpen(false)} />
+        )}
+      </div>
+
       <main>
         <HeroSection />
         <FeatureTabs />
@@ -42,6 +70,10 @@ function App() {
           <div className="text-sm text-slate-500">Built for campus communities.</div>
         </div>
       </footer>
+
+      {loginOpen && (
+        <LoginPage onClose={() => setLoginOpen(false)} onSuccess={handleLoginSuccess} />
+      )}
     </div>
   );
 }
